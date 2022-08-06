@@ -1,8 +1,46 @@
 
 import styled from 'styled-components';
 import logo from './Group 8.png'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect} from "react";
+import axios from 'axios';
+
 export default function TelaLogin(){
+
+    const [emailUsuario,setEmailUsuario]= useState('');
+    const [senhaUsuario,setSenhaUsuario]= useState('');
+    const navigate = useNavigate();
+function confirmarLogin(e){
+    e.preventDefault();
+
+    const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", {
+        email: emailUsuario,
+        password: senhaUsuario
+        
+    }); 
+    
+    requisicao.then( (resposta)=> {
+        console.log(resposta, " resposta aqui")
+        
+        if(resposta.data.email === emailUsuario && resposta.data.password === senhaUsuario){
+        navigate('/hoje')
+        console.log(emailUsuario, "EMAIL AQUI")
+        }
+    });
+    
+    requisicao.catch( () => {
+        if(requisicao.status !== 200){
+            alert("Login errado ou já existente")
+        }
+    });
+
+    setEmailUsuario('');
+    setSenhaUsuario('');
+
+        
+}
+
+
 
     return (
 
@@ -10,24 +48,26 @@ export default function TelaLogin(){
                 <ImgLogin src={logo} />
             
                 <Formulario>
-                <form /* onSubmit={confirmarLogin} */>
+                <form onSubmit={confirmarLogin}>
                     <Dados>    
                         <Forms>
-                                <Input type="text" /* onChange={(e) => setNome(e.target.value)} */ 
-                                   /*  value={nome} */
+                                <Input type="text"  onChange={(e) => setEmailUsuario(e.target.value)} 
+                                   value={emailUsuario} 
                                     required
                                     placeholder='email'
                         
                                 />
                         </Forms>
                         <Forms>
-                                <Input type="email" /* onChange={(e) => setCpf(e.target.value)} */
-                                    /* value={cpf} */
+                                <Input type="text" onChange={(e) => setSenhaUsuario(e.target.value)} 
+                                     value={senhaUsuario}
                                     required
                                     placeholder='senha'
                                 />
                          </Forms>
-                        <Button className='guardar-dados'> <p>Entrar</p></Button>
+                         
+                         <Button type='submit'> <p>Entrar</p></Button>
+                        
                         <Link to="/cadastro">
                         <Cadastrar>Não tem uma conta? Cadastre-se!</Cadastrar>
                         </Link>

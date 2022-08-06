@@ -14,9 +14,9 @@ export default function App(){
 			<Routes>
 				<Route path="/" element={<TelaLogin />} />
 				<Route path="/cadastro/" element={<TelaCadastro />}/>
-                <Route path="/habitos/:idSessao" element={<TelaHabitos />}/>
-                <Route path="/hoje/:cpf/:nome" element={<TelaDoDia />}/>
-                <Route path="/historico/:cpf/:nome" element={<TelaHistorico />}/>
+                <Route path="/habitos/" element={<TelaHabitos />}/>
+                <Route path="/hoje/" element={<TelaDoDia />}/>
+                <Route path="/historico/" element={<TelaHistorico />}/>
 			</Routes>
 		</BrowserRouter>
         </>
