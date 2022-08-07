@@ -7,17 +7,21 @@ import axios from "axios";
 
 export default function TelaHabitos(){
     const { tasks, setTasks } = useContext(UserContext);
-    console.log(tasks, "entrei no habits com context")
-    const [criar, setCriar] = useState(false)
-
+    const [criar, setCriar] = useState('')
+    const [verHabitos, setVerHabitos] = useState([])
+    const [adicionarHabitos, setAdicionarHabitos] = useState('')
     function CriarHabito(resposta){
         if(resposta==="clicado"){
-            setCriar(true)
-            console.log(criar," AQUI OOO ")
+            setAdicionarHabitos('criandoHabitoNovo')
         }
 
     }
-
+    useEffect(()=>{if(verHabitos.length !== 0){
+        setCriar('')
+        console.log(criar, "cansei")
+    }
+    },[]);
+    
 
     useEffect(() => {
 		const promessa = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {
@@ -25,12 +29,11 @@ export default function TelaHabitos(){
         });
         
 		promessa.then(resposta => {
-
-            console.log(resposta, "SOCORRO DEUS")
+            setVerHabitos(resposta.data)
 		});
         
 	}, []);
-
+    console.log(verHabitos, "ver habitos")
 
 
 
@@ -43,10 +46,9 @@ export default function TelaHabitos(){
             </Texto>
             <ImgTopo src={img} />
         </Topo>
-
-        {
-            criar === false
-            ?
+            {
+                criar!== ''
+                ?
             <>          
                 <VerHabitos>
                      
@@ -60,26 +62,20 @@ export default function TelaHabitos(){
                 <SemHabito>
                     Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
                  </SemHabito>
-        </>
+            </>
             :
             <>
-            <VerHabitos>
-                <texto>
+                <VerHabitos>
                     Meus hábitos
-                </texto>
-                <CaixaIcone>
-                    <ion-icon onClick={()=>CriarHabito("clicado")} name="add-outline"></ion-icon>
-                </CaixaIcone>
-            </VerHabitos>
-            <CriandoHabito>
-                TO CRIANDO AQUI
-            </CriandoHabito>
-            <SemHabito>
-            Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
-            </SemHabito>
-        </>
+                    <CaixaIcone>
+                        <ion-icon onClick={()=>CriarHabito("clicado")} name="add-outline"></ion-icon>
+                    </CaixaIcone>
+                 </VerHabitos>
+                 <HabitosInseridos>
+                     HABITO ISERIDO AQUI
+                </HabitosInseridos>
+            </>
         }
-        
     </Body>
     
     )
@@ -172,4 +168,6 @@ border-radius: 5px;
 width: 340px;
 height: 180px;
 margin-top:20px ;
+`
+const HabitosInseridos = styled.div `
 `
