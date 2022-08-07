@@ -4,11 +4,15 @@ import TelaHabitos from "../TelaHabitos/TelaHabitos";
 import TelaDoDia from "../TelaDoDia/TelaDoDia";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import TelaHistorico from "../TelaHistorico/TelaHistorico";
+import UserContext from "../../Contexts/UserContext";
+import { useState } from "react";
+
 
 
 export default function App(){
+    const [tasks, setTasks] = useState([]);
     return (
-        <>
+        <UserContext.Provider value={{tasks, setTasks}}>
         <BrowserRouter>
 		
 			<Routes>
@@ -19,6 +23,6 @@ export default function App(){
                 <Route path="/historico/" element={<TelaHistorico />}/>
 			</Routes>
 		</BrowserRouter>
-        </>
+        </UserContext.Provider>
     )
 }

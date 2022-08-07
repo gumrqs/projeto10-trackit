@@ -4,12 +4,16 @@ import logo from './Group 8.png'
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect} from "react";
 import axios from 'axios';
+import { useContext } from "react";
+import UserContext from "../../Contexts/UserContext";
 
 export default function TelaLogin(){
 
     const [emailUsuario,setEmailUsuario]= useState('');
     const [senhaUsuario,setSenhaUsuario]= useState('');
     const navigate = useNavigate();
+    const { tasks, setTasks } = useContext(UserContext);
+
 function confirmarLogin(e){
     e.preventDefault();
 
@@ -20,17 +24,19 @@ function confirmarLogin(e){
     }); 
     
     requisicao.then( (resposta)=> {
-        console.log(resposta, " resposta aqui")
+        
         
         if(resposta.data.email === emailUsuario && resposta.data.password === senhaUsuario){
-        navigate('/hoje')
-        console.log(emailUsuario, "EMAIL AQUI")
+            setTasks(resposta.data);
+            navigate('/hoje');
         }
+        
     });
-    
+    /* requisicao.then((resposta)=>setDados(resposta)) */
     requisicao.catch( () => {
         if(requisicao.status !== 200){
             alert("Login errado ou já existente")
+        
         }
     });
 
