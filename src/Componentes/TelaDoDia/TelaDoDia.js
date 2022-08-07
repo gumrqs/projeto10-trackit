@@ -1,8 +1,10 @@
 import styled from "styled-components"
 import img from './Rectangle 14.png'
 import dayjs from 'dayjs';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 export default function TelaDoDia(){
+
+    const navigate = useNavigate();
     dayjs.locale('pt-br')
 
     return(
@@ -57,10 +59,18 @@ export default function TelaDoDia(){
             </IconeHabito>
         </Habitos>
         <Footer>
-            <Link to="/habitos">
-                HABITOS
-             </Link>
-        </Footer>
+
+            <InformacaoFooter onClick={()=> navigate('/habitos')}>
+                 Hábitos
+            </InformacaoFooter>
+            <InformacaoFooter>
+                Histórico
+            </InformacaoFooter>
+            <Progresso>
+                
+            </Progresso>
+        </Footer>   
+    
     </Corpo>
     </FundoCorpo>
     )
@@ -165,12 +175,17 @@ ion-icon{
 }
 `
 const Footer = styled.div`
-position:fixed ;
-bottom:0 ;
-left:0 ;
-background-color: red ;
-width:100% ;
-height:70px ;
+width: 100%;
+height: 70px;
+position: fixed ;
+bottom: 0;
+left: 0 ;
+background-color: #FFFF; 
+display: flex ;
+align-items: center ;
+justify-content: space-between ;
+`
+const InformacaoFooter = styled.div`
 font-family: 'Lexend Deca';
 font-style: normal;
 font-weight: 400;
@@ -178,4 +193,16 @@ font-size: 17.976px;
 line-height: 22px;
 text-align: center;
 color: #52B6FF;
+padding-left: 36px ;
+box-sizing: border-box ;
+padding-right: 31px ;
+`
+const Progresso = styled.div` 
+width: 91px;
+height: 91px;
+border-radius: 50%;
+background: #52B6FF;
+position: fixed ;
+bottom: 8px;
+left: 37% ;
 `
