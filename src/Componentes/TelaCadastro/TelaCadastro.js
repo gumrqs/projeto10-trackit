@@ -4,6 +4,7 @@ import logo from './Group 8.png'
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from 'axios';
+import {ThreeDots} from 'react-loader-spinner';
 
 export default function TelaCadastro (){
 
@@ -13,11 +14,12 @@ const [senha,setSenha]= useState('');
 const [nome,setNome]= useState('');
 const [url,setUrl]= useState('');
 const navigate=useNavigate();
+const [isCarregando, setIsCarregando] =useState (false)
 console.log("comecei ")
 
 function confirmarLogin(e){
     e.preventDefault();
-console.log(email, senha, nome)
+    setIsCarregando(true)
  
 const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up", {
             email: email,
@@ -79,7 +81,13 @@ const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v
                                     placeholder='foto'
                             />
                         </Forms>
-                        <Button> <p>Entrar</p></Button>
+                        {
+                            isCarregando?
+                            <Button> <ThreeDots color={'white'} height={30} width={30}/></Button>
+                            :
+                            <Button> <p>Entrar</p></Button>
+                        }
+                
                         <Link to="/">
                         <Cadastrar>Já tem uma conta? Faça login!</Cadastrar>
                         </Link>

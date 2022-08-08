@@ -6,6 +6,8 @@ import { useState, useEffect} from "react";
 import axios from 'axios';
 import { useContext } from "react";
 import UserContext from "../../Contexts/UserContext";
+import {ThreeDots} from 'react-loader-spinner';
+
 
 export default function TelaLogin(){
 
@@ -13,10 +15,11 @@ export default function TelaLogin(){
     const [senhaUsuario,setSenhaUsuario]= useState('');
     const navigate = useNavigate();
     const { tasks, setTasks } = useContext(UserContext);
+    const [isCarregando, setIsCarregando] =useState (false)
 
 function confirmarLogin(e){
     e.preventDefault();
-
+    setIsCarregando(true)
     const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", {
         email: emailUsuario,
         password: senhaUsuario
@@ -71,8 +74,13 @@ function confirmarLogin(e){
                                     placeholder='senha'
                                 />
                          </Forms>
-                         
-                         <Button type='submit'> <p>Entrar</p></Button>
+                         {
+                             isCarregando?
+                             <Button type='submit'> <ThreeDots color={'white'} height={30} width={30}/></Button>
+                            :
+                            <Button type='submit'> <p>Entrar</p></Button>
+                         }
+                        
                         
                         <Link to="/cadastro">
                         <Cadastrar>Não tem uma conta? Cadastre-se!</Cadastrar>

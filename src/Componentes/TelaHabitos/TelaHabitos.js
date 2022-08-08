@@ -5,6 +5,7 @@ import UserContext from "../../Contexts/UserContext";
 import axios from "axios";
 import Habito from "./Habito";
 import { useNavigate } from "react-router-dom";
+import {ThreeDots} from 'react-loader-spinner';
 
 export default function TelaHabitos(){
     const navigate= useNavigate();
@@ -12,7 +13,7 @@ export default function TelaHabitos(){
     const [criar, setCriar] = useState(true)
     const [verHabitos, setVerHabitos] = useState([])
     const [adicionarHabitos, setAdicionarHabitos] = useState(false)
-
+    
 
 const [atualizadorHabitos, setAtualizadorHabitos] = useState(true)
 
@@ -114,6 +115,7 @@ function AddHabito({setAdicionarHabitos, setAtualizadorHabitos, atualizadorHabit
     const [arrayDiasSelecionados, setArrayDiasSelecionados] = useState([]);
     const [habito, setHabito] = useState('');
     const { tasks, setTasks } = useContext(UserContext);
+    const [isCarregando, setIsCarregando] =useState (false)
 
     function selecionarDia(dia,selecionado){
        if(selecionado === true ){
@@ -141,7 +143,7 @@ function AddHabito({setAdicionarHabitos, setAtualizadorHabitos, atualizadorHabit
     }
 function enviarHabitos(e){
     e.preventDefault();
-   
+    setIsCarregando(true)
 
     const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", {
         name: habito,
@@ -247,7 +249,13 @@ console.log(arrayDiasSelecionados, "NAO AGUENTO MAIS")
                      <Cancelar onClick={()=> setAdicionarHabitos(false)}>
                      cancelar
                      </Cancelar>
-                 <Button type='submit'> <p>Salvar</p></Button>
+                     {
+                         isCarregando ?
+                         <Button type='submit'> <ThreeDots color={'white'} height={25} width={25}/> </Button>
+                         :
+                         <Button type='submit'> <p>Salvar</p></Button>
+                     }
+                 
                  </ComponenteBotao>
             </form>
         </Dados>
@@ -320,6 +328,7 @@ box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 position:fixed ;
 top:0;
 left:0 ;
+z-index: 1 ;
 `
 const ImgTopo= styled.img`
 margin-right:18px ;
