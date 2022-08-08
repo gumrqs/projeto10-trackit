@@ -88,6 +88,7 @@ function confirmarLogin(e){
 
 const Login = styled.div`
     width: 100%;
+    height:100vh ;
     background-color: #FFFF;
     display:flex ;
     flex-direction: column ;
@@ -96,7 +97,6 @@ const Login = styled.div`
 `;
 
 const ImgLogin = styled.img`
-margin-top: 68px ;
 `
 const Formulario = styled.div`
 margin-top: 32.62px;

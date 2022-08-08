@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import img from './Rectangle 14.png'
 import { useState, useEffect } from "react"
 import { useContext } from "react";
 import UserContext from "../../Contexts/UserContext";
@@ -10,66 +9,20 @@ export default function TelaHabitos(){
     const { tasks, setTasks } = useContext(UserContext);
     const [criar, setCriar] = useState(true)
     const [verHabitos, setVerHabitos] = useState([])
-    const [adicionarHabitos, setAdicionarHabitos] = useState('')
-    const [selecionarDia, setSelecionarDia] = useState('DiaNselecionado')
-
-    function criarHabito(resposta){
-         if(resposta==="clicado"){
-            setAdicionarHabitos(
-            <CriandoHabito>
-                <Dados /* onSubmit={confirmarLogin} */>
-                    
-                        <Forms>
-                                <Input type="text"  /* onChange={(e) => setEmailUsuario(e.target.value)} 
-                                   value={emailUsuario}  */
-                                    required
-                                    placeholder='nome do hábito'
-                        
-                                />
-                        </Forms>
-                        <DiasSemana>
-                         <DiaNselecionado onClick={()=> selecionarData(1)}>
-                                    D
-                         </DiaNselecionado>
-                         <DiaNselecionado onClick={()=> selecionarData(2)}>
-                                    S
-                         </DiaNselecionado>
-                         <DiaNselecionado onClick={()=> selecionarData(3)}>
-                                    T
-                         </DiaNselecionado>
-                         <DiaNselecionado onClick={()=> selecionarData(4)}>
-                                    Q
-                         </DiaNselecionado>
-                         <DiaNselecionado onClick={()=> selecionarData(5)}>
-                                    Q
-                         </DiaNselecionado>
-                         <DiaNselecionado onClick={()=> selecionarData(6)}>
-                                    S
-                         </DiaNselecionado>
-                         <DiaNselecionado onClick={()=> selecionarData(7)}>
-                                    s
-                         </DiaNselecionado>
-                        </DiasSemana>
-                         <ComponenteBotao>
-                             <Cancelar onClick={()=>criarHabito("cancelado")}>
-                             cancelar
-                             </Cancelar>
-                         <Button type='submit'> <p>Salvar</p></Button>
-                         </ComponenteBotao>
-                </Dados>
-            </CriandoHabito>);
-        } 
-        if(resposta==="cancelado"){
-            setAdicionarHabitos('')
-        }
-    }
-
-    function selecionarData(resposta){
-        if(resposta!=0)
-        setSelecionarDia('DiaSelecionado')
-    }
+    const [adicionarHabitos, setAdicionarHabitos] = useState(false)
+    
 
 
+/*     function selecionarData(resposta){
+        console.log(resposta, "qual que é ?")
+        if(resposta === 1 ){
+        setSelecionarDia(true);
+        console.log(selecionarDia, "dia selecionado")
+        }                   
+    } */
+
+
+const [atualizadorHabitos, setAtualizadorHabitos] = useState(true)
 
     useEffect(() => {
 		const promessa = axios.get(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits`, {
@@ -82,7 +35,7 @@ export default function TelaHabitos(){
         
 
         
-	}, []);
+	}, [atualizadorHabitos]);
 
     console.log(verHabitos, "ver habitos")
     useEffect(()=>{
@@ -93,7 +46,6 @@ export default function TelaHabitos(){
     },[verHabitos]);
    
 
-
     return (
         
     <Body>
@@ -101,7 +53,7 @@ export default function TelaHabitos(){
             <Texto>
                 Trackit
             </Texto>
-            <ImgTopo src={img} />
+            <ImgTopo src={tasks.image} />
         </Topo>
             {
                 criar === true
@@ -110,28 +62,37 @@ export default function TelaHabitos(){
                 <VerHabitos>
                     Meus hábitos
                     <CaixaIcone>
-                        <ion-icon onClick={()=>criarHabito("clicado")} name="add-outline"></ion-icon>
+                        <ion-icon onClick={()=> setAdicionarHabitos(true)} name="add-outline"></ion-icon>
                     </CaixaIcone>
                 </VerHabitos>
-                {adicionarHabitos}
+            {
+                adicionarHabitos ?  <AddHabito setAdicionarHabitos={setAdicionarHabitos} setAtualizadorHabitos={setAtualizadorHabitos} atualizadorHabitos={atualizadorHabitos}/> : <></>
+            }
+                
+                
                 <SemHabito>
                     Você não tem nenhum hábito cadastrado ainda. Adicione um hábito para começar a trackear!
                  </SemHabito>
             </>
             :
-            <Corpo>
             
+            <>
                 <VerHabitos>
                     Meus hábitos
                     <CaixaIcone>
-                        <ion-icon onClick={()=>criarHabito("clicado")} name="add-outline"></ion-icon>
+                        <ion-icon onClick={()=>setAdicionarHabitos(true)} name="add-outline"></ion-icon>
                     </CaixaIcone>
                  </VerHabitos>
-                 {adicionarHabitos}
+
+                {
+                adicionarHabitos ?  <AddHabito setAdicionarHabitos={setAdicionarHabitos} setAtualizadorHabitos={setAtualizadorHabitos} atualizadorHabitos={atualizadorHabitos}/> : <></>
+                }
+               
+
                  <HabitosInseridos>
                      {verHabitos.map((habito, index)=> <Habito  key={index} nome={habito.name} dias={habito.days} id={habito.id}/>)}
                 </HabitosInseridos>
-            </Corpo>
+            </>
         }
         <Footer>
             <InformacaoFooter>
@@ -149,6 +110,156 @@ export default function TelaHabitos(){
     
     )
 }
+
+function AddHabito({setAdicionarHabitos, setAtualizadorHabitos, atualizadorHabitos}){
+    const [selecionarDia1, setSelecionarDia1] = useState(true);
+    const [selecionarDia2, setSelecionarDia2] = useState(true);
+    const [selecionarDia3, setSelecionarDia3] = useState(true);
+    const [selecionarDia4, setSelecionarDia4] = useState(true);
+    const [selecionarDia5, setSelecionarDia5] = useState(true);
+    const [selecionarDia6, setSelecionarDia6] = useState(true);
+    const [selecionarDia7, setSelecionarDia7] = useState(true);
+    const [arrayDiasSelecionados, setArrayDiasSelecionados] = useState([]);
+    const [habito, setHabito] = useState('');
+    const { tasks, setTasks } = useContext(UserContext);
+
+    function selecionarDia(dia,selecionado){
+       if(selecionado === true ){
+            arrayDiasSelecionados.push(dia);
+            setArrayDiasSelecionados([...arrayDiasSelecionados])
+       }
+       if(selecionado === false){
+            let arrayDiasSelecionadosFiltrado = arrayDiasSelecionados.filter(VerificarDias);
+            setArrayDiasSelecionados([...arrayDiasSelecionadosFiltrado])
+       }
+
+       function VerificarDias(numero){
+        if(numero === dia){
+
+            return false;
+        }
+        if( numero !== dia){
+            return true;
+        }
+
+    }
+    console.log(arrayDiasSelecionados, "DIAS SELECIONADOS ")
+
+    }
+function enviarHabitos(e){
+    e.preventDefault();
+
+    const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", {
+        name: habito,
+        days: arrayDiasSelecionados
+        
+    }, {headers: {'Authorization': `Bearer ${tasks.token}`}}); 
+    requisicao.catch( () => {
+        if(requisicao.status !== 200){
+            alert("Login errado ou já existente")
+        
+        }
+    });
+    requisicao.then(()=>{
+        setAdicionarHabitos(false);
+        setAtualizadorHabitos(!atualizadorHabitos)
+    })
+
+}
+    
+console.log(arrayDiasSelecionados, "NAO AGUENTO MAIS")
+
+    return(
+        <CriandoHabito>
+        <Dados >
+            <form onSubmit={enviarHabitos} >
+                <Forms>
+                    <Input type="text"  onChange={(e) => setHabito(e.target.value)} 
+                        value={habito} 
+                        required
+                        placeholder='nome do hábito'
+                    />
+                </Forms>
+                <DiasSemana>
+                    {
+                        selecionarDia7 ?                         
+                        <DiaNselecionado onClick={()=> {setSelecionarDia7(false); selecionarDia(7,true)}}>
+                            D
+                        </DiaNselecionado> :
+                        <DiaSelecionado onClick={()=> {setSelecionarDia7(true); selecionarDia(7,false)}}>
+                            D
+                        </DiaSelecionado>
+                        
+                    }
+                    { 
+                       selecionarDia1 ?                         
+                        <DiaNselecionado onClick={()=> {setSelecionarDia1(false); selecionarDia(1,true)}}>
+                            s
+                        </DiaNselecionado> :
+                        <DiaSelecionado onClick={()=> {setSelecionarDia1(true); selecionarDia(1,false)}}>
+                            s
+                        </DiaSelecionado>
+                    }
+                    { 
+                       selecionarDia2 ?                         
+                        <DiaNselecionado onClick={()=> {setSelecionarDia2(false); selecionarDia(2,true)}}>
+                            T
+                        </DiaNselecionado> :
+                        <DiaSelecionado onClick={()=> {setSelecionarDia2(true); selecionarDia(2,false)}}>
+                            T
+                        </DiaSelecionado>
+                    }
+                    { 
+                       selecionarDia3 ?                         
+                        <DiaNselecionado onClick={()=> {setSelecionarDia3(false); selecionarDia(3,true)}}>
+                            Q
+                        </DiaNselecionado> :
+                        <DiaSelecionado onClick={()=> {setSelecionarDia3(true); selecionarDia(3,false)}}>
+                            Q
+                        </DiaSelecionado>
+                    }
+                    { 
+                       selecionarDia4 ?                         
+                        <DiaNselecionado onClick={()=> {setSelecionarDia4(false); selecionarDia(4,true)}}>
+                            Q
+                        </DiaNselecionado> :
+                        <DiaSelecionado onClick={()=> {setSelecionarDia4(true); selecionarDia(4,false)}}>
+                            Q
+                        </DiaSelecionado>
+                    }
+                    { 
+                       selecionarDia5 ?                         
+                        <DiaNselecionado onClick={()=> {setSelecionarDia5(false); selecionarDia(5,true)}}>
+                            s
+                        </DiaNselecionado> :
+                        <DiaSelecionado onClick={()=> {setSelecionarDia5(true); selecionarDia(5,false)}}>
+                            s
+                        </DiaSelecionado>
+                    }
+                    { 
+                       selecionarDia6 ?                         
+                        <DiaNselecionado onClick={()=> {setSelecionarDia6(false); selecionarDia(6,true)}}>
+                            s
+                        </DiaNselecionado> :
+                        <DiaSelecionado onClick={()=> {setSelecionarDia6(true); selecionarDia(6,false)}}>
+                            s
+                        </DiaSelecionado>
+                    }
+                    
+                </DiasSemana>
+                 <ComponenteBotao>
+                     <Cancelar onClick={()=> setAdicionarHabitos(false)}>
+                     cancelar
+                     </Cancelar>
+                 <Button type='submit'> <p>Salvar</p></Button>
+                 </ComponenteBotao>
+            </form>
+        </Dados>
+    </CriandoHabito>
+    )
+}
+
+
 const DiaSelecionado = styled.div `
 background: #CFCFCF;
 border: 1px solid #D5D5D5;
@@ -167,8 +278,8 @@ margin-right: 4px ;
 color: #FFFFFF;
 `
 
-const DiaNselecionado = styled.div`
-background: #FFFF; 
+const DiaNselecionado  = styled.div`
+background-color: #FFFF; 
 border: 1px solid #D5D5D5;
 border-radius: 5px;
 width: 30px;
@@ -182,8 +293,6 @@ font-weight: 400;
 font-size: 19.976px;
 margin-right: 4px ;
 line-height: 25px;
-
-
 color: #DBDBDB;
 `
 const DiasSemana = styled.div`
@@ -196,8 +305,9 @@ width: 100%;
 `
 const Body = styled.div`
 background-color: #F2F2F2 ;
+height:auto;
+width: 100%;
 height:100vh ;
-width: 100% ;
 display: flex ;
 flex-direction: column ;
 align-items: center ;
@@ -219,6 +329,7 @@ const ImgTopo= styled.img`
 margin-right:18px ;
 width: 51px ;
 height: 51px ;
+border-radius:50% ;
 object-fit:cover;
 object-position:center ;
 `
@@ -281,25 +392,27 @@ margin-top: 28px ;
 color: #666666;
 box-sizing: border-box ;
 padding-left: 17px;
+ ;
 `
 const CriandoHabito = styled.div`
 background: #FFFFFF;
 border-radius: 5px;
 width: 94%;
-height: 180px;
+height: auto;
 padding:18px ;
 display: flex;
 flex-direction: column ;
 justify-content: space-between ;
 box-sizing: border-box ;
+margin-bottom:12px ;
 
 `
 const HabitosInseridos = styled.div `
 width: 90% ;
-height: 91px;
-margin-left:17px ;
+padding-bottom: 90px ;
 `
 const Footer = styled.div`
+
 width: 100%;
 height: 70px;
 position: fixed ;

@@ -1,12 +1,16 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { useContext } from "react";
+import axios from "axios";
+import UserContext from "../../Contexts/UserContext";
+
 
 
 export default function Habito ({nome, dias, id}){
-    console.log(dias, "OS DIAS AQUI");
 
 const [diaHabitoUsuario, setDiaHabitoUsuario] = useState([])
-const semana=['S','T', 'Q', 'Q', 'S', 'S', 'D']
+const semana=['S','T', 'Q', 'Q', 'S', 'S', 'D'];
+const { tasks, setTasks } = useContext(UserContext);
 
 
 if(diaHabitoUsuario.length < 7){
@@ -25,11 +29,17 @@ if(diaHabitoUsuario.length < 7){
     }
 }
 
+const requisicao = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, {
+      /*   name: habito,
+        days: arrayDiasSelecionados */    
+    }, {headers: {'Authorization': `Bearer ${tasks.token}`}}); 
+
     return(
         <CorpoHabito>
 
         <TituloHabito>
-            {nome}
+            {nome} 
+            <ion-icon name="trash-outline" onclick={requisicao}></ion-icon>
         </TituloHabito>
         
         <DiasSemana>
@@ -100,4 +110,6 @@ font-size: 19.976px;
 line-height: 25px;
 color: #666666;
 margin-bottom: 8px ;
+display: flex ;
+justify-content: space-between ;
 `
