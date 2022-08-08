@@ -65,7 +65,7 @@ function confirmarLogin(e){
                                 />
                         </Forms>
                         <Forms>
-                                <Input type="text" onChange={(e) => setSenhaUsuario(e.target.value)} 
+                                <Input type="password" onChange={(e) => setSenhaUsuario(e.target.value)} 
                                      value={senhaUsuario}
                                     required
                                     placeholder='senha'

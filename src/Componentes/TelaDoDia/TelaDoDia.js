@@ -1,11 +1,46 @@
 import styled from "styled-components"
-import img from './Rectangle 14.png'
 import dayjs from 'dayjs';
 import { useNavigate } from "react-router-dom";
-export default function TelaDoDia(){
+import axios from "axios";
+import UserContext from "../../Contexts/UserContext";
+import { useContext, useEffect, useState } from "react";
+import HabitoTelaDia from "./HabitoTelaDia";
+/* import  {  CircularProgressbar  }  from  'react-circular-progressbar' ; 
+import  'react-circular-progressbar/dist/styles.css' ; */
 
+
+
+
+export default function TelaDoDia(){
+    require('dayjs/locale/pt-br');
+    let nomeDia = dayjs().locale('pt-br');
+    const { tasks, setTasks } = useContext(UserContext);
+    const[renderizarHabitos, setRenderizarHabitos] = useState(<></>)
     const navigate = useNavigate();
-    dayjs.locale('pt-br')
+    const [atualizadorHabitos, setAtualizadorHabitos] = useState(true)
+    
+useEffect(()=>{
+const promessa= axios.get('https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/today',{headers: {'Authorization': `Bearer ${tasks.token}`}}); 
+
+promessa.then((resposta)=>{
+    let listaDados=resposta.data;
+    if(listaDados.length===0){
+    console.log(resposta, "to aqui DO HOJE")
+    setRenderizarHabitos(<></>);
+}
+if(listaDados.length!==0){
+    setRenderizarHabitos(
+        <>
+            {listaDados.map((habito, index)=> <HabitoTelaDia key={index} done={habito.done} titulo={habito.name}  sequencia={habito.currentSequence} recorde={habito.highestSequence} id={habito.id} setAtualizadorHabitos={setAtualizadorHabitos} atualizadorHabitos={atualizadorHabitos}/>)}
+        </>
+    )
+}
+})
+},[atualizadorHabitos])
+
+
+console.log(renderizarHabitos, "to aqui DO HOJE")
+
 
     return(
     <FundoCorpo>
@@ -14,61 +49,30 @@ export default function TelaDoDia(){
             <Texto>
                 Trackit
             </Texto>
-            <ImgTopo src={img} />
+            <ImgTopo src={tasks.image} />
         </Topo>
         <DiaDoHabito>
-        {dayjs().format('dddd, DD/MM')}
+        {nomeDia.format('dddd, DD/MM')}
         </DiaDoHabito>
         <HabitosConcluidos>
              Nenhum hábito concluído ainda
         </HabitosConcluidos>
-        <Habitos>
-            <HabitoAdicionado>
-                 <p>Ler 1 capítulo de livro</p>
-                <InformacaoHabito>
-                    <p>Sequência atual: 3 dias
-                    Seu recorde: 5 dias</p>
-                </InformacaoHabito>
-            </HabitoAdicionado>
-            <IconeHabito>
-            <ion-icon name="checkbox-outline"></ion-icon>
-            </IconeHabito>
-        </Habitos>
-        <Habitos>
-            <HabitoAdicionado>
-                 <p>Ler 1 capítulo de livro</p>
-                <InformacaoHabito>
-                    <p>Sequência atual: 3 dias
-                    Seu recorde: 5 dias</p>
-                </InformacaoHabito>
-            </HabitoAdicionado>
-            <IconeHabito>
-            <ion-icon name="checkbox-outline"></ion-icon>
-            </IconeHabito>
-        </Habitos>
-        <Habitos>
-            <HabitoAdicionado>
-                 <p>Ler 1 capítulo de livro</p>
-                <InformacaoHabito>
-                    <p>Sequência atual: 3 dias
-                    Seu recorde: 5 dias</p>
-                </InformacaoHabito>
-            </HabitoAdicionado>
-            <IconeHabito>
-            <ion-icon name="checkbox-outline"></ion-icon>
-            </IconeHabito>
-        </Habitos>
+       
+           {renderizarHabitos}
+        
         <Footer>
 
             <InformacaoFooter onClick={()=> navigate('/habitos')}>
                  Hábitos
-            </InformacaoFooter>
-            <InformacaoFooter>
+            </InformacaoFooter >
+            <Progresso onClick={()=> navigate('/hoje')}>
+                Hoje
+
+            </Progresso>
+            <InformacaoFooter onClick={()=> navigate('/historico')}>
                 Histórico
             </InformacaoFooter>
-            <Progresso>
-                
-            </Progresso>
+
         </Footer>   
     
     </Corpo>
@@ -96,10 +100,14 @@ box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 position:fixed ;
 top:0;
 left:0 ;
+z-index: 1 ;
 `
 const ImgTopo= styled.img`
 margin-right:18px ;
 width: 51px ;
+border-radius: 50% ;
+object-fit:cover;
+object-position:center ;
 height: 51px ;
 `
 const Texto = styled.div `
@@ -122,6 +130,7 @@ color: #126BA5;
 padding-top: 98px ;
 background-color:#F2F2F2 ;
 box-sizing: border-box ;
+text-transform:capitalize ;
 `
 const HabitosConcluidos = styled.div`
 font-family: 'Lexend Deca';
@@ -132,48 +141,8 @@ line-height: 22px;
 color: #BABABA;
 margin-bottom: 28px ;
 `
-const Habitos = styled.div`
-background: #FFFFFF;
-border-radius: 5px;
-width: 340px;
-height: 94px;
-display: flex ;
-justify-content: space-between ;
-align-items:center ;
-margin-bottom: 10px ;
-`
-const HabitoAdicionado = styled.div `
-p{
-    font-family: 'Lexend Deca';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19.976px;
-    line-height: 25px;
-    color: #666666;
-    margin-left: 15px ;
-}
-`
-const InformacaoHabito = styled.div`
 
-p{
-    font-family: 'Lexend Deca';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12.976px;
-    line-height: 16px;
-    color: #666666;
-    max-width: 148px;
-    margin-left: 15px ;
 
-}
-`
-const IconeHabito = styled.div`
-ion-icon{
-   color: #EBEBEB;
-   font-size: 69px;
-   margin-right: 13px ;
-}
-`
 const Footer = styled.div`
 width: 100%;
 height: 70px;
@@ -184,6 +153,7 @@ background-color: #FFFF;
 display: flex ;
 align-items: center ;
 justify-content: space-between ;
+margin-top: 90px;
 `
 const InformacaoFooter = styled.div`
 font-family: 'Lexend Deca';
@@ -198,11 +168,20 @@ box-sizing: border-box ;
 padding-right: 31px ;
 `
 const Progresso = styled.div` 
+display:flex ;
+align-items: center ;
+justify-content: center ;
 width: 91px;
 height: 91px;
 border-radius: 50%;
 background: #52B6FF;
-position: fixed ;
-bottom: 8px;
-left: 37% ;
+margin-bottom: 30px;
+font-family: 'Lexend Deca';
+font-style: normal;
+font-weight: 400;
+font-size: 17.976px;
+line-height: 22px;
+text-align: center;
+color: #FFFFFF;
+
 `

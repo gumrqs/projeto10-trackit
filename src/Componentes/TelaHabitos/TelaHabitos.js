@@ -4,22 +4,14 @@ import { useContext } from "react";
 import UserContext from "../../Contexts/UserContext";
 import axios from "axios";
 import Habito from "./Habito";
+import { useNavigate } from "react-router-dom";
 
 export default function TelaHabitos(){
+    const navigate= useNavigate();
     const { tasks, setTasks } = useContext(UserContext);
     const [criar, setCriar] = useState(true)
     const [verHabitos, setVerHabitos] = useState([])
     const [adicionarHabitos, setAdicionarHabitos] = useState(false)
-    
-
-
-/*     function selecionarData(resposta){
-        console.log(resposta, "qual que é ?")
-        if(resposta === 1 ){
-        setSelecionarDia(true);
-        console.log(selecionarDia, "dia selecionado")
-        }                   
-    } */
 
 
 const [atualizadorHabitos, setAtualizadorHabitos] = useState(true)
@@ -90,20 +82,20 @@ const [atualizadorHabitos, setAtualizadorHabitos] = useState(true)
                
 
                  <HabitosInseridos>
-                     {verHabitos.map((habito, index)=> <Habito  key={index} nome={habito.name} dias={habito.days} id={habito.id}/>)}
+                     {verHabitos.map((habito, index)=> <Habito   key={index} setAtualizadorHabitos={setAtualizadorHabitos} atualizadorHabitos={atualizadorHabitos} nome={habito.name} dias={habito.days} id={habito.id}/>)}
                 </HabitosInseridos>
             </>
         }
         <Footer>
-            <InformacaoFooter>
+            <InformacaoFooter onClick={()=> navigate('/habitos')}>
                  Hábitos
             </InformacaoFooter>
-            <InformacaoFooter>
+            <Progresso onClick={()=> navigate('/hoje')}>
+                Hoje
+            </Progresso>
+            <InformacaoFooter  onClick={()=> navigate('/historico')}>
                 Histórico
             </InformacaoFooter>
-            <Progresso>
-                
-            </Progresso>
         </Footer>
 
     </Body>
@@ -127,6 +119,7 @@ function AddHabito({setAdicionarHabitos, setAtualizadorHabitos, atualizadorHabit
        if(selecionado === true ){
             arrayDiasSelecionados.push(dia);
             setArrayDiasSelecionados([...arrayDiasSelecionados])
+            console.log(dia, "deus ?")
        }
        if(selecionado === false){
             let arrayDiasSelecionadosFiltrado = arrayDiasSelecionados.filter(VerificarDias);
@@ -148,6 +141,7 @@ function AddHabito({setAdicionarHabitos, setAtualizadorHabitos, atualizadorHabit
     }
 function enviarHabitos(e){
     e.preventDefault();
+   
 
     const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits", {
         name: habito,
@@ -156,7 +150,7 @@ function enviarHabitos(e){
     }, {headers: {'Authorization': `Bearer ${tasks.token}`}}); 
     requisicao.catch( () => {
         if(requisicao.status !== 200){
-            alert("Login errado ou já existente")
+            alert("Volte a tela de login")
         
         }
     });
@@ -168,13 +162,15 @@ function enviarHabitos(e){
 }
     
 console.log(arrayDiasSelecionados, "NAO AGUENTO MAIS")
-
+/* function salvar(){
+    localStorage.setItem(id.value);
+} */
     return(
         <CriandoHabito>
         <Dados >
             <form onSubmit={enviarHabitos} >
                 <Forms>
-                    <Input type="text"  onChange={(e) => setHabito(e.target.value)} 
+                    <Input /* id="nome" */ type="text"  onChange={(e) => setHabito(e.target.value)} 
                         value={habito} 
                         required
                         placeholder='nome do hábito'
@@ -392,7 +388,7 @@ margin-top: 28px ;
 color: #666666;
 box-sizing: border-box ;
 padding-left: 17px;
- ;
+ 
 `
 const CriandoHabito = styled.div`
 background: #FFFFFF;
@@ -436,13 +432,21 @@ box-sizing: border-box ;
 padding-right: 31px ;
 `
 const Progresso = styled.div` 
+display:flex ;
+align-items: center ;
+justify-content: center ;
 width: 91px;
 height: 91px;
 border-radius: 50%;
 background: #52B6FF;
-position: fixed ;
-bottom: 8px;
-left: 37% ;
+margin-bottom: 30px;
+font-family: 'Lexend Deca';
+font-style: normal;
+font-weight: 400;
+font-size: 17.976px;
+line-height: 22px;
+text-align: center;
+color: #FFFFFF;
 `
 
 const Input =  styled.input`

@@ -6,12 +6,13 @@ import UserContext from "../../Contexts/UserContext";
 
 
 
-export default function Habito ({nome, dias, id}){
+export default function Habito ({nome, dias, id, setAtualizadorHabitos, atualizadorHabitos}){
 
 const [diaHabitoUsuario, setDiaHabitoUsuario] = useState([])
 const semana=['S','T', 'Q', 'Q', 'S', 'S', 'D'];
 const { tasks, setTasks } = useContext(UserContext);
 
+console.log(semana, "aopa")
 
 if(diaHabitoUsuario.length < 7){
     for(let i=0; i<semana.length; i++){
@@ -19,6 +20,7 @@ if(diaHabitoUsuario.length < 7){
         let igualdade = false;
         for(let j=0; j<dias.length; j++){
             if(dias[j] === DiaSemana){
+               
                 diaHabitoUsuario.push(<DiaSelecionado>{semana[i]}</DiaSelecionado>);
                 igualdade= true;
             }
@@ -27,23 +29,33 @@ if(diaHabitoUsuario.length < 7){
             diaHabitoUsuario.push(<DiaNselecionado>{semana[i]}</DiaNselecionado>)
         }
     }
+/*     if(diaHabitoUsuario===7){
+        let diaHabitoUsuarioNovo =[diaHabitoUsuario.at(-1), ...diaHabitoUsuario]
+        diaHabitoUsuarioNovo.pop();
+    } */
 }
 
-const requisicao = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`, {
-      /*   name: habito,
-        days: arrayDiasSelecionados */    
-    }, {headers: {'Authorization': `Bearer ${tasks.token}`}}); 
 
+function deletar(){
+     let resultado = window.confirm("Tem certeza que deseja mesmo cancelar?")
+    if( resultado === true){
+const requisicao = axios.delete(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,{headers: {'Authorization': `Bearer ${tasks.token}`}}); 
+
+requisicao.then(()=>{
+            setAtualizadorHabitos(!atualizadorHabitos);
+})
+}
+}
     return(
         <CorpoHabito>
 
         <TituloHabito>
             {nome} 
-            <ion-icon name="trash-outline" onclick={requisicao}></ion-icon>
+            <ion-icon name="trash-outline" onClick={deletar}></ion-icon>
         </TituloHabito>
         
         <DiasSemana>
-                {diaHabitoUsuario}
+            {diaHabitoUsuario}
         </DiasSemana>
 
 
@@ -112,4 +124,5 @@ color: #666666;
 margin-bottom: 8px ;
 display: flex ;
 justify-content: space-between ;
+cursor: pointer;
 `
